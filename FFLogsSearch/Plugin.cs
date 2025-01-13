@@ -12,9 +12,9 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.Sheets;
-using SamplePlugin.Windows;
+using FFLogsSearch.Windows;
 
-namespace SamplePlugin;
+namespace FFLogsSearch;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -50,7 +50,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "A useful message to display in /xlhelp"
+            HelpMessage = "Uses args to search fflogs :^)"
         });
 
         PluginInterface.UiBuilder.Draw += DrawUI;
@@ -65,7 +65,7 @@ public sealed class Plugin : IDalamudPlugin
         // Add a simple message to the log with level set to information
         // Use /xllog to open the log window in-game
         // Example Output: 00:57:54.959 | INF | [FFLogsSearch] ===A cool log message from Sample Plugin===
-        Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
+        Log.Information($"==={PluginInterface.Manifest.Name}===");
         
         this.ContextMenu = contextMenu;
         this.ContextMenu.OnMenuOpened += this.OnContextMenuOpened;
