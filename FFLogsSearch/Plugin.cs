@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Dalamud.Game.Command;
 using Dalamud.IoC;
@@ -13,6 +14,7 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.Sheets;
 using FFLogsSearch.Windows;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace FFLogsSearch;
 
@@ -70,6 +72,43 @@ public sealed class Plugin : IDalamudPlugin
         this.ContextMenu = contextMenu;
         this.ContextMenu.OnMenuOpened += this.OnContextMenuOpened;
         this.DM = dataManager;
+        
+        //aether
+        this.NA.Add(73, "adamantoise");
+        this.NA.Add(79, "cactuar");
+        this.NA.Add(54, "faerie");
+        this.NA.Add(63, "gilgamesh");
+        this.NA.Add(40, "jenova");
+        this.NA.Add(65, "midgardsormr");
+        this.NA.Add(99, "sargatanas");
+        this.NA.Add(57, "siren");
+        //crystal
+        this.NA.Add(91, "balmung");
+        this.NA.Add(34, "brynhildr");
+        this.NA.Add(74, "coeurl");
+        this.NA.Add(62, "diabolos");
+        this.NA.Add(81, "goblin");
+        this.NA.Add(75, "malboro");
+        this.NA.Add(37, "mateus");
+        this.NA.Add(41, "zalera");
+        //primal
+        this.NA.Add(78, "behemoth");
+        this.NA.Add(93, "excalibur");
+        this.NA.Add(53, "exodus");
+        this.NA.Add(35, "famfrit");
+        this.NA.Add(95, "hyperion");
+        this.NA.Add(55, "lamia");
+        this.NA.Add(64, "leviathan");
+        this.NA.Add(77, "ultros");
+        //dynamis
+        this.NA.Add(406, "halicarnassus");
+        this.NA.Add(407, "maduin");
+        this.NA.Add(404, "marilith");
+        this.NA.Add(405, "seraph");
+        this.NA.Add(408, "cuchulainn");
+        this.NA.Add(411, "golem");
+        this.NA.Add(409, "kraken");
+        this.NA.Add(410, "rafflesia");
     }
 
     public void Dispose()
@@ -89,18 +128,48 @@ public sealed class Plugin : IDalamudPlugin
         OpenUrl("https://www.fflogs.com/search/?term=" + args);
         // in response to the slash command, just toggle the display status of our main ui
     }
+    private static readonly string[] ValidAddons =
+    [
+        null,
+        "PartyMemberList",
+        "FriendList",
+        "FreeCompany",
+        "LinkShell",
+        "CrossWorldLinkshell",
+        "_PartyList",
+        "ChatLog",
+        "LookingForGroup",
+        "BlackList",
+        "ContentMemberList",
+        "SocialList",
+        "ContactList",
+    ];
 
+    private Dictionary<uint, string> NA = new Dictionary<uint, string>();
+    
+    
+    
     private void OnContextMenuOpened(IMenuOpenedArgs args)
     {
 
 
-        if (args.Target is MenuTargetDefault defMen && defMen.TargetName != null)
+        if (Array.IndexOf(ValidAddons, args.AddonName) != -1 && args.Target is MenuTargetDefault defMen && defMen.TargetName != null && defMen.TargetName != null)
         {
             args.AddMenuItem(new()
             {
                 OnClicked = (_) =>
                 {
-                    OpenUrl("https://www.fflogs.com/search/?term=" + defMen.TargetName);
+                    //defMen.TargetHomeWorld
+                    uint worldId = defMen.TargetHomeWorld.Value.RowId;
+                    if (NA.ContainsKey(worldId))
+                    {
+                        OpenUrl("https://www.fflogs.com/character/na/" + NA[worldId] + "/" + defMen.TargetName);
+                    }
+                    else
+                    {
+                        OpenUrl("https://www.fflogs.com/search/?term=" + defMen.TargetName);
+                    }
+                    
                 },
                 Prefix = SeIconChar.BoxedLetterF,
                 Name = "Search FFLogs",
