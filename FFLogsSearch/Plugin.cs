@@ -73,6 +73,7 @@ public sealed class Plugin : IDalamudPlugin
         this.ContextMenu.OnMenuOpened += this.OnContextMenuOpened;
         this.DM = dataManager;
         
+        //https://ffxiv.consolegameswiki.com/wiki/Servers
         //aether
         this.NA.Add(73, "adamantoise");
         this.NA.Add(79, "cactuar");
@@ -139,7 +140,6 @@ public sealed class Plugin : IDalamudPlugin
         "_PartyList",
         "ChatLog",
         "LookingForGroup",
-        "BlackList",
         "ContentMemberList",
         "SocialList",
         "ContactList",
@@ -148,12 +148,12 @@ public sealed class Plugin : IDalamudPlugin
     private Dictionary<uint, string> NA = new Dictionary<uint, string>();
     
     
-    
+
     private void OnContextMenuOpened(IMenuOpenedArgs args)
     {
 
 
-        if (Array.IndexOf(ValidAddons, args.AddonName) != -1 && args.Target is MenuTargetDefault defMen && defMen.TargetName != null && defMen.TargetName != null)
+        if (Array.IndexOf(ValidAddons, args.AddonName) != -1 && args.Target is MenuTargetDefault defMen && defMen.TargetName != null)
         {
             args.AddMenuItem(new()
             {
